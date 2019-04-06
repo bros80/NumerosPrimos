@@ -1,0 +1,110 @@
+/******************************************************************************
+El objetivo del programa es generar una matriz de 6x4 
+con los primeros 24 numeros primos y que estos sean aleatorios.
+
+*******************************************************************************/
+
+#include <iostream>
+#include <time.h>
+
+using namespace std;
+
+bool isPair (int number) {
+    return (number % 2 == 0 ? true : false );
+}
+
+bool isOdd (int number) {
+    return !isPair(number);
+}
+
+bool isPrimeNumber (int number) {
+    if (isOdd(number)) {
+        for (int i = 3; i < number; i++) {
+            if (number % i == 0)
+                return false;
+        }
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+void minorPrimeNumbersThat (const int NUMBER, int arrayOfPrimeNumbers[]) {
+    int index = 0;
+    
+    arrayOfPrimeNumbers[index++] = 2;
+    for (int i = 3; i <= NUMBER; i++) {
+      if (isPrimeNumber(i))
+        arrayOfPrimeNumbers[index++] = i;
+    }
+}
+
+int randomLocation (int max) {
+    srand ( time(NULL));
+    
+    return (rand() % max);
+}
+
+void shuffle (int matrix[][4], const int ROWS, const int COLS) {
+    int value = 0;
+    int row = 0;
+    int col = 0;
+    
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            row = randomLocation (ROWS);
+            col = randomLocation (COLS);
+            
+            value = matrix[i][j];
+            matrix[i][j] = matrix[row][col];
+            matrix[row][col] = value;
+        }
+    }
+}
+
+string space (int number) {
+    return (number > 10 ? " " : "  ");
+}
+
+void printMatrix (int matrix[][4], const int ROWS, const int COLS) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            cout << matrix[i][j] << space(matrix[i][j]);
+        }
+        cout << "\n";
+    }
+}
+
+void initMatrix (
+    int matrix[][4], const int ROWS, const int COLS, int array[]) {
+    int index = 0;
+    
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) 
+            matrix[i][j] = array[index++];
+    }
+}
+
+int main()
+{
+    const int ROWS_MATRIX = 6;
+    const int COLS_MATRIX = 4;
+    const int NUMBER = 100;
+    const int LENGTH_ARRAY = 25;
+    
+    int matrixOfPrimeNumbers[ROWS_MATRIX][COLS_MATRIX];
+    int arrayOfPrimeNumbers[LENGTH_ARRAY]; 
+    
+    minorPrimeNumbersThat (NUMBER, arrayOfPrimeNumbers);
+    
+    initMatrix (
+        matrixOfPrimeNumbers, ROWS_MATRIX, COLS_MATRIX, 
+        arrayOfPrimeNumbers);
+    
+    shuffle (matrixOfPrimeNumbers, ROWS_MATRIX, COLS_MATRIX);
+        
+    printMatrix (matrixOfPrimeNumbers, ROWS_MATRIX, COLS_MATRIX);
+    
+    return 0;
+}
