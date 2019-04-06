@@ -1,0 +1,109 @@
+/******************************************************************************
+Calculo de numeros primos absolutos
+
+*******************************************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+bool isPair (int number) {
+    return (number % 2 == 0 ? true : false );
+}
+
+bool isOdd (int number) {
+    return !isPair(number);
+}
+
+bool isPrimeNumber (int number) {
+    if (number == 2)
+        return true;
+        
+    if (isOdd(number)) {
+        for (int i = 3; i < number; i++) {
+            if (number % i == 0)
+                return false;
+        }
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+int numberOfDigits (int number) {
+    if (number >= 100 && number < 1000)
+        return 3;
+    if (number >= 10 && number < 100)
+        return 2;
+    else
+        return 1;
+}
+
+int sumOfDigits(const int number) {
+    int hundred = 0;
+    int ten = 0;
+    int unity = 0;
+    
+    if (numberOfDigits(number) > 3) {
+        hundred = number / 100;
+        ten = (number % 100) / 10;
+    }
+    else {
+        ten = number / 10;
+    }
+    unity = number % 10;
+    
+    return (hundred + ten + unity);
+}
+
+void minorPrimeNumbersThat (const int NUMBER, int arrayOfPrimeNumbers[]) {
+    int index = 0;
+    int sum = 0;
+    
+    for (int i = 2; i <= NUMBER; i++) {
+        if (isPrimeNumber(i)) {
+            if (numberOfDigits(i) == 1) {
+                arrayOfPrimeNumbers[index++] = i;
+            }
+            else {
+                sum = sumOfDigits(i);
+                if (isPrimeNumber(sum)) {
+                    if (numberOfDigits(sum) == 1) {
+                        arrayOfPrimeNumbers[index++] = i;
+                    }
+                    else {
+                        sum = sumOfDigits(sum);
+                        if (isPrimeNumber(sum)) {
+                            if (numberOfDigits(sum) == 1)
+                                arrayOfPrimeNumbers[index++] = i;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void printNumbers ( int array[], const int LENGTH_ARRAY) {
+    for (int i = 0; i < LENGTH_ARRAY; i++)
+        cout << array[i] << ", ";
+}
+
+int main()
+{
+    const int NUMBER = 100;
+    const int LENGTH_ARRAY = 25;
+    
+    int arrayOfPrimeNumbers[LENGTH_ARRAY] = {0}; 
+    
+    cout << "Absolute Prime Numbers : ";
+    printNumbers (arrayOfPrimeNumbers, LENGTH_ARRAY);
+    cout << endl;
+    
+    minorPrimeNumbersThat (NUMBER, arrayOfPrimeNumbers);
+
+    printNumbers (arrayOfPrimeNumbers, LENGTH_ARRAY);
+    
+    return 0;
+}
